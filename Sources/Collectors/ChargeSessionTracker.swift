@@ -93,14 +93,7 @@ public actor ChargeSessionTracker {
             }
 
             if activeSession == nil {
-                // Rule: New session starts when AC connects while below the limit
-                // (or if limit is 100% or connecting for the first time)
-                if snapshot.currentChargePercentage < chargeLimit || chargeLimit == 100 {
-                    await startNewSession(snapshot: snapshot, at: now)
-                } else {
-                    // If connecting while already at/above limit, start session tracking immediately
-                    await startNewSession(snapshot: snapshot, at: now)
-                }
+                await startNewSession(snapshot: snapshot, at: now)
             } else if var session = activeSession {
                 let lastTick = lastTickTimestamp ?? now
                 let actualDelta = now.timeIntervalSince(lastTick)
@@ -261,14 +254,7 @@ public actor ChargeSessionTracker {
         let startOfDay = calendar.startOfDay(for: Date())
         let nextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? Date()
 
-        var total = (try? await store.getTotalOvercharge(from: startOfDay, to: nextDay)) ?? 0.0
-
-        // If currently ongoing session started today, ensure live progress is reflected
-        if let current = activeSession, current.startTime >= startOfDay {
-            let inDb = (try? await store.getTotalOvercharge(from: startOfDay, to: nextDay)) ?? 0.0
-            total = max(inDb, total)
-        }
-        return total
+        return (try? await store.getTotalOvercharge(from: startOfDay, to: nextDay)) ?? 0.0
     }
 
     /// Total overcharge time accumulated this week (Monday to now).
