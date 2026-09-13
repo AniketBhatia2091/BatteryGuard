@@ -1,0 +1,41 @@
+name: BatteryGuard
+options:
+  bundleIdPrefix: com.batteryguard
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    SWIFT_VERSION: "5.9"
+
+targets:
+  BatteryGuard:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources
+    frameworks:
+      - framework: IOKit.framework
+    settings:
+      base:
+        PRODUCT_NAME: BatteryGuard
+        PRODUCT_BUNDLE_IDENTIFIER: com.batteryguard.app
+        INFOPLIST_KEY_CFBundleDisplayName: BatteryGuard
+        INFOPLIST_KEY_LSUIElement: YES
+        ARCHS:
+          - arm64
+          - x86_64
+        ONLY_ACTIVE_ARCH: NO
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        DEVELOPMENT_TEAM: ""
+        ENABLE_HARDENED_RUNTIME: NO
+        GENERATE_INFOPLIST_FILE: YES
+    postCompileScripts:
+      - name: Clear Extended Attributes
+        script: |
+          xattr -cr "$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME" || true
