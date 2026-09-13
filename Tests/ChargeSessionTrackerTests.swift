@@ -9,6 +9,9 @@ struct ChargeSessionTrackerTests {
         print(" Running BatteryGuard Unit & Integration Test Suite")
         print("======================================================\n")
 
+        // Run Charge Limiter and SMC read-only tests
+        ChargeLimiterTests.runAll()
+
         let testDbPath = "/tmp/test_bg_\(UUID().uuidString).sqlite"
         defer {
             try? FileManager.default.removeItem(atPath: testDbPath)

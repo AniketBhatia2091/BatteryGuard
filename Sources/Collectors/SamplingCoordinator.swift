@@ -16,6 +16,18 @@ public final class SamplingCoordinator: ObservableObject {
     @Published public private(set) var todayOverchargeSeconds: Double = 0.0
     @Published public private(set) var weekOverchargeSeconds: Double = 0.0
 
+    // Charge limiter and hardware detection
+    @Published public var chargeLimit: Int = 80 {
+        didSet {
+            limiter.chargeLimit = chargeLimit
+            Task {
+                await sessionTracker.setChargeLimit(chargeLimit)
+            }
+        }
+    }
+    public let limiter: ChargeLimiter
+    public let smcController: SMCController
+
     private var collectors: [any MetricCollector] = []
     private let volatileStorage: any MetricsStorageProtocol
     public let persistentStore: any PersistentStorageProtocol
@@ -28,11 +40,14 @@ public final class SamplingCoordinator: ObservableObject {
 
     public init(
         volatileStorage: any MetricsStorageProtocol = InMemoryMetricsStorage(),
-        persistentStore: any PersistentStorageProtocol = SQLiteMetricsStore()
+        persistentStore: any PersistentStorageProtocol = SQLiteMetricsStore(),
+        notifier: ChargeLimitNotifierProtocol = ChargeLimitNotificationManager.shared
     ) {
         self.volatileStorage = volatileStorage
         self.persistentStore = persistentStore
-        self.sessionTracker = ChargeSessionTracker(store: persistentStore, chargeLimit: 100)
+        self.sessionTracker = ChargeSessionTracker(store: persistentStore, chargeLimit: 80)
+        self.limiter = ChargeLimiter(chargeLimit: 80, notifier: notifier)
+        self.smcController = SMCController()
 
         let battery = BatteryCollector()
         self.batteryCollector = battery
@@ -97,6 +112,7 @@ public final class SamplingCoordinator: ObservableObject {
 
         // Initialize session recovery (crash recovery or ongoing session restore)
         Task {
+            self.limiter.notifier?.requestAuthorization()
             await sessionTracker.initializeRecovery(currentSnapshot: snapshot)
             await refreshSessionStats()
         }
@@ -138,6 +154,9 @@ public final class SamplingCoordinator: ObservableObject {
                 if collector.id == batteryCollector.id {
                     let snapshot = batteryCollector.readBatterySnapshot()
                     self.latestBatterySnapshot = snapshot
+
+                    // Evaluate charge limit notifications
+                    self.limiter.evaluate(snapshot: snapshot)
 
                     // Feed snapshot to charge session state machine
                     await sessionTracker.handleTick(snapshot: snapshot)

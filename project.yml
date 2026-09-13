@@ -22,6 +22,7 @@ targets:
       - path: Sources/UI
     frameworks:
       - framework: IOKit.framework
+      - framework: UserNotifications.framework
     settings:
       base:
         PRODUCT_NAME: BatteryGuard
@@ -53,6 +54,7 @@ targets:
       - path: Sources/CLI
     frameworks:
       - framework: IOKit.framework
+      - framework: UserNotifications.framework
     settings:
       base:
         PRODUCT_NAME: BatteryGuardCLI
@@ -74,6 +76,7 @@ targets:
       - path: Tests
     frameworks:
       - framework: IOKit.framework
+      - framework: UserNotifications.framework
     settings:
       base:
         PRODUCT_NAME: BatteryGuardTests

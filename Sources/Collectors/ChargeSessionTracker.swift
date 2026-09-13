@@ -38,6 +38,10 @@ public actor ChargeSessionTracker {
         self.debounceDuration = debounceDuration
     }
 
+    public func setChargeLimit(_ limit: Int) {
+        self.chargeLimit = limit
+    }
+
     // MARK: - Crash / Restart Recovery
 
     /// Called on app startup to inspect SQLite for ongoing sessions from previous runs or crashes.

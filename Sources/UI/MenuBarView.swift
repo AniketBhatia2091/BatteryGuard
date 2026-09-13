@@ -26,6 +26,11 @@ public struct MenuBarView: View {
 
             Divider()
 
+            // Charge Limiter Card (Alert Mode)
+            chargeLimiterCard
+
+            Divider()
+
             // Overcharge Exposure Card (SQLite-backed)
             overchargeStatsCard
 
@@ -149,6 +154,46 @@ public struct MenuBarView: View {
                 }
             }
         }
+    }
+
+    private var chargeLimiterCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Label("Charge Limit", systemImage: "bolt.badge.clock")
+                    .font(.caption.bold())
+                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                // Honest mode badge
+                HStack(spacing: 3) {
+                    Circle().fill(Color.orange).frame(width: 5, height: 5)
+                    Text("Alert Mode")
+                        .font(.caption2.bold())
+                        .foregroundColor(.orange)
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(RoundedRectangle(cornerRadius: 4).fill(Color.orange.opacity(0.12)))
+                .help("In Alert Mode, BatteryGuard notifies you when your battery reaches the limit so you can unplug. Hardware charging cutoff is not active in this phase.")
+            }
+
+            HStack {
+                Text("\(coordinator.chargeLimit)% Limit")
+                    .font(.subheadline.bold())
+
+                Spacer()
+
+                Stepper("", value: $coordinator.chargeLimit, in: 50...100, step: 5)
+                    .labelsHidden()
+            }
+
+            Text("Notifies you to unplug charger when battery reaches \(coordinator.chargeLimit)%.")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.08)))
     }
 
     private var overchargeStatsCard: some View {
