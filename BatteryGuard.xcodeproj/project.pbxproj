@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		06DD0A814466A18EB8068532 /* ChargeLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D986542C882777BEC12DA /* ChargeLimiter.swift */; };
-		0BA389BE8977D168CB4A4C52 /* AppIcon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 7734CED709D54A80230A309D /* AppIcon.iconset */; };
 		1E514F944DB3CAC5B12E407D /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
 		1FFE10002C77D5CC0288C4E1 /* CollectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */; };
 		21DCFA22767C5DA7CC602914 /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
@@ -20,7 +19,6 @@
 		4F4DC3A7D06E19F8930AD728 /* CollectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */; };
 		5456D4EC2D9C770FD1F46BC4 /* BatteryCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB36B37C96E632A83A9E1AE /* BatteryCollector.swift */; };
 		59AACC51BA52221773F1450D /* MetricsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352D679C56AD4DBE9DAE14CA /* MetricsStorage.swift */; };
-		5CCD2BA13075566A74F7B08D /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */; };
 		5D09F7F881B70DC55E181D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9040C6484871A5D2FCC6FA8B /* Assets.xcassets */; };
 		5D78764D79D73062B2C5ABD7 /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
 		5D8714081F90746DF9170CAE /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE89E094B28B0079114C876 /* MenuBarView.swift */; };
@@ -52,10 +50,8 @@
 		32D6E4BC15F78C01DF506B4D /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
 		352D679C56AD4DBE9DAE14CA /* MetricsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsStorage.swift; sourceTree = "<group>"; };
 		4BB6B448FB9A8B460B571513 /* ChargeLimitNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeLimitNotificationManager.swift; sourceTree = "<group>"; };
-		4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		5946A51D4AA3D87D5B7562D5 /* BatteryGuardTests */ = {isa = PBXFileReference; includeInIndex = 0; path = BatteryGuardTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		628EA56A14D0B58D0DE2BC42 /* ChargeSessionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSessionTracker.swift; sourceTree = "<group>"; };
-		7734CED709D54A80230A309D /* AppIcon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = AppIcon.iconset; sourceTree = "<group>"; };
 		7E1F34B3B1DBF3828E34491F /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		9040C6484871A5D2FCC6FA8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C0DD44424F82ED95C97C62 /* SamplingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingCoordinator.swift; sourceTree = "<group>"; };
@@ -83,8 +79,6 @@
 		51FCA751A345644E9956BB83 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */,
-				7734CED709D54A80230A309D /* AppIcon.iconset */,
 				9040C6484871A5D2FCC6FA8B /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -270,8 +264,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CCD2BA13075566A74F7B08D /* AppIcon.icns in Resources */,
-				0BA389BE8977D168CB4A4C52 /* AppIcon.iconset in Resources */,
 				5D09F7F881B70DC55E181D97 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,7 +363,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BatteryGuard;
-				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -400,7 +392,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BatteryGuard;
-				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
