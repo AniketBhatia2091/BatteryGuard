@@ -1,8 +1,9 @@
 import Foundation
 import Combine
+import AppKit
 
-/// Orchestrates background sampling across all registered MetricCollectors.
-/// Future collectors (Thermal, CPU, etc.) register here and share the same sampling loop.
+/// Orchestrates background sampling across all registered MetricCollectors,
+/// manages charge session tracking with SQLite persistence, and responds to sleep/wake notifications.
 @MainActor
 public final class SamplingCoordinator: ObservableObject {
     @Published public private(set) var latestBatterySnapshot: BatterySnapshot?
@@ -10,18 +11,73 @@ public final class SamplingCoordinator: ObservableObject {
     @Published public private(set) var isSampling: Bool = false
     @Published public private(set) var sampleCount: Int = 0
 
+    // Charge session and overcharge state
+    @Published public private(set) var activeSession: StoredChargeSession?
+    @Published public private(set) var todayOverchargeSeconds: Double = 0.0
+    @Published public private(set) var weekOverchargeSeconds: Double = 0.0
+
     private var collectors: [any MetricCollector] = []
-    private let storage: any MetricsStorageProtocol
+    private let volatileStorage: any MetricsStorageProtocol
+    public let persistentStore: any PersistentStorageProtocol
+    public let sessionTracker: ChargeSessionTracker
     private let batteryCollector: BatteryCollector
 
     private var samplingTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
     public var samplingInterval: TimeInterval = 5.0
 
-    public init(storage: any MetricsStorageProtocol = InMemoryMetricsStorage()) {
-        self.storage = storage
+    public init(
+        volatileStorage: any MetricsStorageProtocol = InMemoryMetricsStorage(),
+        persistentStore: any PersistentStorageProtocol = SQLiteMetricsStore()
+    ) {
+        self.volatileStorage = volatileStorage
+        self.persistentStore = persistentStore
+        self.sessionTracker = ChargeSessionTracker(store: persistentStore, chargeLimit: 100)
+
         let battery = BatteryCollector()
         self.batteryCollector = battery
         self.collectors = [battery]
+
+        setupNotificationObservers()
+    }
+
+    private func setupNotificationObservers() {
+        let wsCenter = NSWorkspace.shared.notificationCenter
+        wsCenter.addObserver(
+            forName: NSWorkspace.willSleepNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            Task { @MainActor in
+                await self.sessionTracker.handleSystemWillSleep(latestSnapshot: self.latestBatterySnapshot)
+            }
+        }
+
+        wsCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            Task { @MainActor in
+                let current = self.batteryCollector.readBatterySnapshot()
+                self.latestBatterySnapshot = current
+                await self.sessionTracker.handleSystemDidWake(currentSnapshot: current)
+                await self.refreshSessionStats()
+            }
+        }
+
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.willTerminateNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            Task { @MainActor in
+                await self.sessionTracker.flushAndClose()
+            }
+        }
     }
 
     /// Register additional hardware/system collectors (e.g. ThermalCollector, CPUCollector)
@@ -30,13 +86,20 @@ public final class SamplingCoordinator: ObservableObject {
         collectors.append(collector)
     }
 
-    /// Starts the background sampling loop
+    /// Starts the background sampling loop and initializes session crash recovery
     public func start() {
         guard samplingTask == nil else { return }
         isSampling = true
 
-        // Read an immediate snapshot on start
-        refreshImmediate()
+        // Read immediate snapshot
+        let snapshot = batteryCollector.readBatterySnapshot()
+        self.latestBatterySnapshot = snapshot
+
+        // Initialize session recovery (crash recovery or ongoing session restore)
+        Task {
+            await sessionTracker.initializeRecovery(currentSnapshot: snapshot)
+            await refreshSessionStats()
+        }
 
         samplingTask = Task { [weak self] in
             while !Task.isCancelled {
@@ -54,7 +117,7 @@ public final class SamplingCoordinator: ObservableObject {
         isSampling = false
     }
 
-    /// Takes an immediate snapshot and updates published state
+    /// Takes an immediate snapshot, samples all collectors, and updates session state
     public func refreshImmediate() {
         let snapshot = batteryCollector.readBatterySnapshot()
         self.latestBatterySnapshot = snapshot
@@ -70,20 +133,31 @@ public final class SamplingCoordinator: ObservableObject {
         for collector in currentCollectors where collector.isEnabled {
             do {
                 let sample = try await collector.collectSample()
-                await storage.append(sample: sample)
+                await volatileStorage.append(sample: sample)
 
                 if collector.id == batteryCollector.id {
                     let snapshot = batteryCollector.readBatterySnapshot()
                     self.latestBatterySnapshot = snapshot
+
+                    // Feed snapshot to charge session state machine
+                    await sessionTracker.handleTick(snapshot: snapshot)
                 }
             } catch {
                 print("[SamplingCoordinator] Collector \(collector.id) error: \(error)")
             }
         }
 
-        let updated = await storage.getRecentSamples(limit: 30)
+        let updated = await volatileStorage.getRecentSamples(limit: 30)
         self.recentSamples = updated
         self.sampleCount += 1
+
+        await refreshSessionStats()
+    }
+
+    private func refreshSessionStats() async {
+        self.activeSession = await sessionTracker.activeSession
+        self.todayOverchargeSeconds = await sessionTracker.getTodayOverchargeSeconds()
+        self.weekOverchargeSeconds = await sessionTracker.getWeekOverchargeSeconds()
     }
 
     deinit {
