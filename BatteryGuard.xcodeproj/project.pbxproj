@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06DD0A814466A18EB8068532 /* ChargeLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D986542C882777BEC12DA /* ChargeLimiter.swift */; };
+		0BA389BE8977D168CB4A4C52 /* AppIcon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 7734CED709D54A80230A309D /* AppIcon.iconset */; };
 		1E514F944DB3CAC5B12E407D /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
 		1FFE10002C77D5CC0288C4E1 /* CollectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */; };
 		21DCFA22767C5DA7CC602914 /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
@@ -19,6 +20,8 @@
 		4F4DC3A7D06E19F8930AD728 /* CollectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */; };
 		5456D4EC2D9C770FD1F46BC4 /* BatteryCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB36B37C96E632A83A9E1AE /* BatteryCollector.swift */; };
 		59AACC51BA52221773F1450D /* MetricsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352D679C56AD4DBE9DAE14CA /* MetricsStorage.swift */; };
+		5CCD2BA13075566A74F7B08D /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */; };
+		5D09F7F881B70DC55E181D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9040C6484871A5D2FCC6FA8B /* Assets.xcassets */; };
 		5D78764D79D73062B2C5ABD7 /* SMCController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266A2B8372D361C9BDF0D246 /* SMCController.swift */; };
 		5D8714081F90746DF9170CAE /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE89E094B28B0079114C876 /* MenuBarView.swift */; };
 		6EFA40F54034A9789D5F45CC /* CollectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */; };
@@ -32,6 +35,7 @@
 		ACD4CCDFC9DFCBA81447682E /* ChargeLimitNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6B448FB9A8B460B571513 /* ChargeLimitNotificationManager.swift */; };
 		ADF683C94354D1F2973E5CF9 /* SamplingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C0DD44424F82ED95C97C62 /* SamplingCoordinator.swift */; };
 		BA9E60671A10E1F69FF15055 /* ChargeSessionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628EA56A14D0B58D0DE2BC42 /* ChargeSessionTracker.swift */; };
+		C4B6ABF42DB8F528BD36AD02 /* MenuBarIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55FF7FB57CE04C4364CDF52 /* MenuBarIconProvider.swift */; };
 		C7A64FB00DF85ABDB892B711 /* MetricsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352D679C56AD4DBE9DAE14CA /* MetricsStorage.swift */; };
 		D1D983697047ED098FE6B4CB /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D6E4BC15F78C01DF506B4D /* LaunchAtLoginManager.swift */; };
 		E129E479573855B7FF2A93B8 /* ChargeLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D986542C882777BEC12DA /* ChargeLimiter.swift */; };
@@ -48,14 +52,18 @@
 		32D6E4BC15F78C01DF506B4D /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
 		352D679C56AD4DBE9DAE14CA /* MetricsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsStorage.swift; sourceTree = "<group>"; };
 		4BB6B448FB9A8B460B571513 /* ChargeLimitNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeLimitNotificationManager.swift; sourceTree = "<group>"; };
+		4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		5946A51D4AA3D87D5B7562D5 /* BatteryGuardTests */ = {isa = PBXFileReference; includeInIndex = 0; path = BatteryGuardTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		628EA56A14D0B58D0DE2BC42 /* ChargeSessionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSessionTracker.swift; sourceTree = "<group>"; };
+		7734CED709D54A80230A309D /* AppIcon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = AppIcon.iconset; sourceTree = "<group>"; };
 		7E1F34B3B1DBF3828E34491F /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		9040C6484871A5D2FCC6FA8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C0DD44424F82ED95C97C62 /* SamplingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingCoordinator.swift; sourceTree = "<group>"; };
 		AB65BFB4705F4C6E2DDB5DE2 /* BatteryGuardCLI */ = {isa = PBXFileReference; includeInIndex = 0; path = BatteryGuardCLI; sourceTree = BUILT_PRODUCTS_DIR; };
 		B93B878E1CE2A36A570A10F7 /* ChargeSessionTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSessionTrackerTests.swift; sourceTree = "<group>"; };
 		C2DE2C9237583B062101A1DC /* BatteryGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BatteryGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3614155D6BDD5308C4FC627 /* CollectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectorProtocol.swift; sourceTree = "<group>"; };
+		C55FF7FB57CE04C4364CDF52 /* MenuBarIconProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIconProvider.swift; sourceTree = "<group>"; };
 		DAE793B470A37FAF86569125 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DEB36B37C96E632A83A9E1AE /* BatteryCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryCollector.swift; sourceTree = "<group>"; };
 		EBE89E094B28B0079114C876 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
@@ -72,9 +80,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		51FCA751A345644E9956BB83 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4C5D4E8FA77FC73EDC5F1AAC /* AppIcon.icns */,
+				7734CED709D54A80230A309D /* AppIcon.iconset */,
+				9040C6484871A5D2FCC6FA8B /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		58F7C1DF2825ABD3B67B7A21 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				C55FF7FB57CE04C4364CDF52 /* MenuBarIconProvider.swift */,
 				EBE89E094B28B0079114C876 /* MenuBarView.swift */,
 				7E1F34B3B1DBF3828E34491F /* TimelineView.swift */,
 			);
@@ -140,6 +159,7 @@
 				6D011C29EEFD30CBA01B5EE1 /* App */,
 				CED8780F71AA4649B7A15BDE /* CLI */,
 				E095BD680E60A379915150F9 /* Collectors */,
+				51FCA751A345644E9956BB83 /* Resources */,
 				C2C637E249FB6E26654B3CB8 /* Storage */,
 				6DA863F5B4F9AB0C733D7268 /* Tests */,
 				58F7C1DF2825ABD3B67B7A21 /* UI */,
@@ -156,6 +176,7 @@
 			buildPhases = (
 				9C1AD63C1BD5B9063E34CA8D /* Sources */,
 				8F1CB47B170C68ADA09F651D /* Clear Extended Attributes */,
+				062031DBC12180718CCDE845 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -244,6 +265,19 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		062031DBC12180718CCDE845 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CCD2BA13075566A74F7B08D /* AppIcon.icns in Resources */,
+				0BA389BE8977D168CB4A4C52 /* AppIcon.iconset in Resources */,
+				5D09F7F881B70DC55E181D97 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXShellScriptBuildPhase section */
 		8F1CB47B170C68ADA09F651D /* Clear Extended Attributes */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -310,6 +344,7 @@
 				A4D4E1432F71E56655E76771 /* ChargeSessionTracker.swift in Sources */,
 				6EFA40F54034A9789D5F45CC /* CollectorProtocol.swift in Sources */,
 				D1D983697047ED098FE6B4CB /* LaunchAtLoginManager.swift in Sources */,
+				C4B6ABF42DB8F528BD36AD02 /* MenuBarIconProvider.swift in Sources */,
 				5D8714081F90746DF9170CAE /* MenuBarView.swift in Sources */,
 				C7A64FB00DF85ABDB892B711 /* MetricsStorage.swift in Sources */,
 				1E514F944DB3CAC5B12E407D /* SMCController.swift in Sources */,
@@ -336,6 +371,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BatteryGuard;
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -364,6 +400,7 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BatteryGuard;
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -68,9 +68,9 @@ public struct MenuBarView: View {
             // Brand row
             HStack {
                 HStack(spacing: 6) {
-                    Image(systemName: "shield.lefthalf.filled")
+                    Image(nsImage: MenuBarIconProvider.makeMenuBarIcon())
+                        .renderingMode(.template)
                         .foregroundColor(.accentColor)
-                        .font(.system(size: 14, weight: .semibold))
 
                     Text("BatteryGuard")
                         .font(.system(size: 13, weight: .bold))
@@ -163,21 +163,22 @@ public struct MenuBarView: View {
                 .background(RoundedRectangle(cornerRadius: 4).fill(Color.secondary.opacity(0.1)))
             }
 
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 // Cycle Count
-                VStack(alignment: .leading, spacing: 1) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("Cycles")
                         .font(.system(size: 10))
                         .foregroundColor(.secondary)
                     Text(snapshot.cycleCount.map { "\($0)" } ?? "—")
                         .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(6)
                 .background(RoundedRectangle(cornerRadius: 6).fill(Color.secondary.opacity(0.08)))
 
-                // Estimated Health % with Disclosure Tooltip
-                VStack(alignment: .leading, spacing: 1) {
+                // Estimated Health % with Disclosure Tooltip & Visible Caveat
+                VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 3) {
                         Text("Estimated Health")
                             .font(.system(size: 10))
@@ -192,10 +193,16 @@ public struct MenuBarView: View {
                         Text(String(format: "%.1f%%", health))
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundColor(health >= 80 ? .primary : .orange)
+
+                        Text("(macOS may report a different %)")
+                            .font(.system(size: 8))
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     } else {
                         Text("—")
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                     }
+                    Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(6)
@@ -267,9 +274,10 @@ public struct MenuBarView: View {
                 .padding(6)
                 .background(RoundedRectangle(cornerRadius: 6).fill(Color.orange.opacity(0.08)))
             } else {
-                Text("Notifies you to unplug charger when battery reaches \(coordinator.chargeLimit)%.")
+                Text("BatteryGuard's own reminder — does not control charging.")
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(10)

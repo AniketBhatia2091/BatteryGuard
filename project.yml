@@ -20,6 +20,7 @@ targets:
       - path: Sources/Collectors
       - path: Sources/Storage
       - path: Sources/UI
+      - path: Resources
     frameworks:
       - framework: IOKit.framework
       - framework: UserNotifications.framework
@@ -30,6 +31,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.batteryguard.app
         INFOPLIST_KEY_CFBundleDisplayName: BatteryGuard
         INFOPLIST_KEY_LSUIElement: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleIconFile: AppIcon
         ARCHS:
           - arm64
           - x86_64
