@@ -12,13 +12,19 @@ public final class ChargeLimitNotificationManager: ChargeLimitNotifierProtocol {
     
     public static let shared = ChargeLimitNotificationManager()
     
-    private let center = UNUserNotificationCenter.current()
+    private var center: UNUserNotificationCenter? {
+        if Bundle.main.bundleIdentifier != nil {
+            return UNUserNotificationCenter.current()
+        }
+        return nil
+    }
     private var isAuthorized = false
-    
+
     public init() {}
-    
+
     /// Requests notification permissions for alert banners and sound.
     public func requestAuthorization() {
+        guard let center = center else { return }
         center.requestAuthorization(options: [.alert, .sound]) { [weak self] granted, error in
             if let error = error {
                 print("[ChargeLimitNotificationManager] Notification auth error: \(error.localizedDescription)")
@@ -43,6 +49,10 @@ public final class ChargeLimitNotificationManager: ChargeLimitNotifierProtocol {
             trigger: trigger
         )
         
+        guard let center = center else {
+            print("[ChargeLimitNotificationManager] Notification scheduled (CLI/test environment): \(percentage)% reached.")
+            return
+        }
         center.add(request) { error in
             if let error = error {
                 print("[ChargeLimitNotificationManager] Failed to schedule notification: \(error)")

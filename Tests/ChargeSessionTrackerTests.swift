@@ -10,7 +10,7 @@ struct ChargeSessionTrackerTests {
         print("======================================================\n")
 
         // Run Charge Limiter and SMC read-only tests
-        ChargeLimiterTests.runAll()
+        await ChargeLimiterTests.runAll()
 
         let testDbPath = "/tmp/test_bg_\(UUID().uuidString).sqlite"
         defer {

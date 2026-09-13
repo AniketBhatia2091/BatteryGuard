@@ -14,7 +14,7 @@ final class MockChargeLimitNotifier: ChargeLimitNotifierProtocol {
 }
 
 public enum ChargeLimiterTests {
-    public static func runAll() {
+    public static func runAll() async {
         print("\n======================================================")
         print(" Running BatteryGuard Charge Limiter & SMC Test Suite")
         print("======================================================")
@@ -25,6 +25,7 @@ public enum ChargeLimiterTests {
         testLimiterDebouncePerSession()
         testLimiterACDisconnectReset()
         testLimiterHysteresisReset()
+        await testDailyOverchargeHistory()
 
         print("======================================================")
         print(" 🎉 ALL CHARGE LIMITER & SMC TESTS PASSED!")
@@ -145,5 +146,36 @@ public enum ChargeLimiterTests {
         limiter.evaluate(snapshot: BatterySnapshot(currentChargePercentage: 80, chargingState: .charging, isACPowerConnected: true))
         assert(mock.notificationsSent.count == 2, "Fires again after hysteresis reset")
         print("  ✅ Passed: 2% hysteresis reset verified.")
+    }
+
+    private static func testDailyOverchargeHistory() async {
+        print("\n• Test A7: Testing 14-Day Swift Charts History Query...")
+        let testDb = "/tmp/test_history_\(UUID().uuidString).sqlite"
+        defer {
+            try? FileManager.default.removeItem(atPath: testDb)
+            try? FileManager.default.removeItem(atPath: "\(testDb)-wal")
+            try? FileManager.default.removeItem(atPath: "\(testDb)-shm")
+        }
+
+        let store = SQLiteMetricsStore(customPath: testDb)
+
+        let s1 = StoredChargeSession(
+            sessionId: "s1",
+            startTime: Date(),
+            endTime: Date().addingTimeInterval(300),
+            lastUpdated: Date(),
+            maxPercentReached: 85,
+            chargeLimitSettingAtTime: 80,
+            secondsSpentAtOrAboveLimit: 120.0,
+            secondsSpentAt100Percent: 0.0
+        )
+        try! await store.startChargeSession(session: s1)
+
+        let history = try! await store.getDailyOverchargeHistory(days: 14)
+        assert(history.count == 14, "Must return exactly 14 daily summaries")
+        let todaySummary = history.last!
+        assert(abs(todaySummary.minutes - 2.0) < 0.001, "Today's overcharge should be 2.0 minutes")
+        print("  -> Returned 14 continuous days. Today's overcharge: \(todaySummary.minutes)m")
+        print("  ✅ Passed: 14-day history aggregation query verified.")
     }
 }

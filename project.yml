@@ -23,6 +23,7 @@ targets:
     frameworks:
       - framework: IOKit.framework
       - framework: UserNotifications.framework
+      - framework: ServiceManagement.framework
     settings:
       base:
         PRODUCT_NAME: BatteryGuard

@@ -15,6 +15,7 @@ public final class SamplingCoordinator: ObservableObject {
     @Published public private(set) var activeSession: StoredChargeSession?
     @Published public private(set) var todayOverchargeSeconds: Double = 0.0
     @Published public private(set) var weekOverchargeSeconds: Double = 0.0
+    @Published public private(set) var dailyHistory: [DailyOverchargeSummary] = []
 
     // Charge limiter and hardware detection
     @Published public var chargeLimit: Int = 80 {
@@ -177,6 +178,8 @@ public final class SamplingCoordinator: ObservableObject {
         self.activeSession = await sessionTracker.activeSession
         self.todayOverchargeSeconds = await sessionTracker.getTodayOverchargeSeconds()
         self.weekOverchargeSeconds = await sessionTracker.getWeekOverchargeSeconds()
+        let history = (try? await persistentStore.getDailyOverchargeHistory(days: 14)) ?? []
+        self.dailyHistory = history
     }
 
     deinit {

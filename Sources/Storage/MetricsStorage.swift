@@ -46,6 +46,18 @@ public protocol MetricsStorageProtocol: AnyObject, Sendable {
     func clear() async
 }
 
+/// Daily aggregated overcharge exposure for Swift Charts history.
+public struct DailyOverchargeSummary: Identifiable, Sendable, Equatable {
+    public var id: Date { date }
+    public let date: Date
+    public let minutes: Double
+
+    public init(date: Date, minutes: Double) {
+        self.date = date
+        self.minutes = minutes
+    }
+}
+
 /// Durable storage interface for charge sessions that survive app restarts.
 public protocol PersistentStorageProtocol: AnyObject, Sendable {
     func startChargeSession(session: StoredChargeSession) async throws
@@ -60,6 +72,7 @@ public protocol PersistentStorageProtocol: AnyObject, Sendable {
     func getOngoingSession() async throws -> StoredChargeSession?
     func fetchRecentSessions(limit: Int) async throws -> [StoredChargeSession]
     func getTotalOvercharge(from startDate: Date, to endDate: Date) async throws -> Double
+    func getDailyOverchargeHistory(days: Int) async throws -> [DailyOverchargeSummary]
     func closeDatabase() async
 }
 
@@ -340,6 +353,50 @@ public actor SQLiteMetricsStore: PersistentStorageProtocol {
             return sqlite3_column_double(stmt, 0)
         }
         return 0.0
+    }
+
+    /// Retrieves a continuous timeline of daily overcharge exposure for the past N days.
+    ///
+    /// Specifically queries and sums `seconds_spent_at_or_above_limit` (converted to minutes: / 60.0),
+    /// strictly matching the "Today" and "This Week" overcharge exposure cards.
+    /// Days with 0 overcharge default to 0.0 minutes so the chart displays a continuous baseline.
+    public func getDailyOverchargeHistory(days: Int = 14) throws -> [DailyOverchargeSummary] {
+        guard let db = db else { throw SQLiteError.databaseClosed }
+        let calendar = Calendar.current
+        let todayStart = calendar.startOfDay(for: Date())
+
+        var summaries: [DailyOverchargeSummary] = []
+        for offset in (0..<days).reversed() {
+            guard let dayStart = calendar.date(byAdding: .day, value: -offset, to: todayStart),
+                  let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
+                continue
+            }
+
+            let sql = """
+            SELECT COALESCE(SUM(seconds_spent_at_or_above_limit), 0.0)
+            FROM charge_sessions
+            WHERE start_time >= ? AND start_time < ?;
+            """
+
+            var stmt: OpaquePointer?
+            guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else {
+                throw SQLiteError.prepareFailed(lastErrorMessage())
+            }
+
+            sqlite3_bind_double(stmt, 1, dayStart.timeIntervalSince1970)
+            sqlite3_bind_double(stmt, 2, dayEnd.timeIntervalSince1970)
+
+            var seconds = 0.0
+            if sqlite3_step(stmt) == SQLITE_ROW {
+                seconds = sqlite3_column_double(stmt, 0)
+            }
+            sqlite3_finalize(stmt)
+
+            let minutes = seconds / 60.0
+            summaries.append(DailyOverchargeSummary(date: dayStart, minutes: minutes))
+        }
+
+        return summaries
     }
 
     private func parseSessionRow(stmt: OpaquePointer?) -> StoredChargeSession {
